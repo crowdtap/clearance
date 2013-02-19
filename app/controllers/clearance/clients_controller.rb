@@ -1,16 +1,16 @@
-class Clearance::UsersController < ApplicationController
+class Clearance::ClientsController < ApplicationController
   unloadable
 
   skip_before_filter :authenticate, :only => [:new, :create]
   before_filter :redirect_to_root,  :only => [:new, :create], :if => :signed_in?
 
   def new
-    @user = ::User.new(params[:user])
+    @user = ::Client.new(params[:user])
     render :template => 'users/new'
   end
 
   def create
-    @user = ::User.new params[:user]
+    @user = ::Client.new params[:user]
     if @user.save
       flash_notice_after_create
       redirect_to(url_after_create)
