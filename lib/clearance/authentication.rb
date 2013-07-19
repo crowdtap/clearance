@@ -50,7 +50,7 @@ module Clearance
           :value   => user.remember_token,
           :expires => Clearance.configuration.cookie_expiration.call,
           :domain  => :all
-        }
+        }.merge(cookie_scope)
         self.current_user = user
       end
     end
@@ -61,7 +61,7 @@ module Clearance
     #   sign_out
     def sign_out
       current_user.reset_remember_token! if current_user
-      cookies.delete(:remember_token)
+      cookies.delete(:remember_token, cookie_scope)
       self.current_user = nil
     end
 
@@ -112,6 +112,10 @@ module Clearance
       if token = cookies[:remember_token]
         ::User.find_by_remember_token(token)
       end
+    end
+
+    def cookie_scope
+      { domain: :all }
     end
 
     def store_location
